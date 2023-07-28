@@ -1,0 +1,25 @@
+{
+  "name": "encryption",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/anrylu/encryption-js.git"
+  },
+  "author": "Anry Lu",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/anrylu/encryption-js/issues"
+  },
+  "homepage": "https://github.com/anrylu/encryption-js#readme",
+  "dependencies": {
+    "oprf": "^2.0.0"
+  },
+  "devDependencies": {
+    "jest": "^29.6.2"
+  }
+}
