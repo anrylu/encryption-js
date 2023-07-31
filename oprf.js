@@ -1,27 +1,9 @@
 const OPRF = require('oprf');
-
-// Function to encode Uint8Array to Base64 string
-function uint8ArrayToBase64(uint8Array) {
-    return btoa(String.fromCharCode(...uint8Array));
-}
-
-// Function to decode Base64 string to Uint8Array
-function base64ToUint8Array(base64String) {
-    const binaryString = atob(base64String);
-    const uint8Array = Uint8Array.from(binaryString, char => char.charCodeAt(0));
-    return uint8Array;
-}
+const {Uint8ArrayToBase64, Base64ToUint8Array, MergeUint8Array} = require('./utility.js');
 
 async function sha512Hash(uint8Array) {
     const buffer = await crypto.subtle.digest('SHA-512', uint8Array);
     return new Uint8Array(buffer);
-}
-
-function mergeUint8Array(a, b) {
-    var ret = new Uint8Array(a.length + b.length);
-    ret.set(a);
-    ret.set(b, a.length);
-    return ret;
 }
 
 async function expandMessage(input) {
@@ -34,15 +16,15 @@ async function expandMessage(input) {
         45, 114, 105, 115, 116, 114, 101, 116, 116, 111,
         50, 53, 53, 45, 83, 72, 65, 53, 49, 50,
         40]);
-    let b0Src = mergeUint8Array(zPad, new TextEncoder().encode(input));
-    b0Src = mergeUint8Array(b0Src, libStr);
-    b0Src = mergeUint8Array(b0Src, new Uint8Array([0]));
-    b0Src = mergeUint8Array(b0Src, dstPrime);
+    let b0Src = MergeUint8Array(zPad, new TextEncoder().encode(input));
+    b0Src = MergeUint8Array(b0Src, libStr);
+    b0Src = MergeUint8Array(b0Src, new Uint8Array([0]));
+    b0Src = MergeUint8Array(b0Src, dstPrime);
     b0 = await sha512Hash(b0Src);
 
     // calculate bi
-    let biSrc = mergeUint8Array(b0, new Uint8Array([1]))
-    biSrc = mergeUint8Array(biSrc, dstPrime);
+    let biSrc = MergeUint8Array(b0, new Uint8Array([1]))
+    biSrc = MergeUint8Array(biSrc, dstPrime);
     bi = await sha512Hash(biSrc)
 
     return bi;
@@ -59,8 +41,8 @@ async function Blind(input) {
 
     // mask point
     const masked = oprf.maskPoint(point);
-    const blindedElement = uint8ArrayToBase64(masked.point);
-    const blind = uint8ArrayToBase64(masked.mask);
+    const blindedElement = Uint8ArrayToBase64(masked.point);
+    const blind = Uint8ArrayToBase64(masked.mask);
     return { blind, blindedElement };
 }
   
@@ -70,21 +52,21 @@ async function Finalize(input, blind, evaluatedElement) {
     await oprf.ready;
 
     // process inpput
-    evaluatedElement = base64ToUint8Array(evaluatedElement);
-    blind = base64ToUint8Array(blind);
+    evaluatedElement = Base64ToUint8Array(evaluatedElement);
+    blind = Base64ToUint8Array(blind);
 
     // unblind
     const unblindedElement = oprf.unmaskPoint(evaluatedElement, blind);
     const finalizeDST = new Uint8Array([70, 105, 110, 97, 108, 105, 122, 101]);
 
     // hash
-    let hashInput = mergeUint8Array(new Uint8Array([input.length>>8, input.length&0xFF]), new TextEncoder().encode(input));
-    hashInput = mergeUint8Array(hashInput, new Uint8Array([0, 32]));
-    hashInput = mergeUint8Array(hashInput, unblindedElement);
-    hashInput = mergeUint8Array(hashInput, finalizeDST);
+    let hashInput = MergeUint8Array(new Uint8Array([input.length>>8, input.length&0xFF]), new TextEncoder().encode(input));
+    hashInput = MergeUint8Array(hashInput, new Uint8Array([0, 32]));
+    hashInput = MergeUint8Array(hashInput, unblindedElement);
+    hashInput = MergeUint8Array(hashInput, finalizeDST);
     const hash = await sha512Hash(hashInput);
 
-    return uint8ArrayToBase64(hash);
+    return Uint8ArrayToBase64(hash);
 }
 
 module.exports = {
