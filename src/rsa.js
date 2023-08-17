@@ -48,15 +48,17 @@ async function EncryptMessage(publicKeyEncoded, msg) {
     const publicKey = await convertPublicKey(publicKeyEncoded);
     const encoder = new TextEncoder();
     const data = encoder.encode(msg);
-    return await crypto.subtle.encrypt({ name: "RSA-OAEP" }, publicKey, data);
+    const ciphertext = await crypto.subtle.encrypt({ name: "RSA-OAEP" }, publicKey, data);
+    return Uint8ArrayToBase64(new Uint8Array(ciphertext));
 }
 
 async function DecryptMessage(privateKeyEncoded, ciphertext) {
     const privateKey = await convertPrivateKey(privateKeyEncoded);
+    const ciphertextBuffer = Base64ToUint8Array(ciphertext);
     const decryptedData = await crypto.subtle.decrypt(
         { name: "RSA-OAEP" },
         privateKey,
-        ciphertext
+        ciphertextBuffer
     );
     const decoder = new TextDecoder();
     return decoder.decode(decryptedData);

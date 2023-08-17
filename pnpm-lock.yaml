@@ -7,6 +7,12 @@ dependencies:
   oprf:
     specifier: ^2.0.0
     version: registry.npmmirror.com/oprf@2.0.0
+  tweetnacl:
+    specifier: ^1.0.3
+    version: registry.npmmirror.com/tweetnacl@1.0.3
+  tweetnacl-util:
+    specifier: ^0.15.1
+    version: registry.npmmirror.com/tweetnacl-util@0.15.1
 
 devDependencies:
   '@babel/core':
@@ -5812,6 +5818,18 @@ packages:
     resolution: {integrity: sha512-t0hLfiEKfMUoqhG+U1oid7Pva4bbDPHYfJNiB7BiIjRkj1pyC++4N3huJfqY6aRH6VTB0rvtzQwjM4K6qpfOig==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/tslib/-/tslib-2.6.1.tgz}
     name: tslib
     version: 2.6.1
+    dev: false
+
+  registry.npmmirror.com/tweetnacl-util@0.15.1:
+    resolution: {integrity: sha512-RKJBIj8lySrShN4w6i/BonWp2Z/uxwC3h4y7xsRrpP59ZboCd0GpEVsOnMDYLMmKBpYhb5TgHzZXy7wTfYFBRw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/tweetnacl-util/-/tweetnacl-util-0.15.1.tgz}
+    name: tweetnacl-util
+    version: 0.15.1
+    dev: false
+
+  registry.npmmirror.com/tweetnacl@1.0.3:
+    resolution: {integrity: sha512-6rt+RN7aOi1nGMyC4Xa5DdYiukl2UWCbcJft7YhxReBGQD7OAM8Pbxw6YMo4r2diNEA8FEmu32YOn9rhaiE5yw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/tweetnacl/-/tweetnacl-1.0.3.tgz}
+    name: tweetnacl
+    version: 1.0.3
     dev: false
 
   registry.npmmirror.com/type-detect@4.0.8:

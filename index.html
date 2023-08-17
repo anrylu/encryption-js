@@ -2,19 +2,71 @@
 <html>
 <head>
     <script>
-        function blindOnClick() {
-            encryption.oprf.Blind('ggs').then((wtf)=> {
+        const message = "hello world";
+        function aesOnClick() {
+            const passphrase = 'pass';
+            encryption.aes.EncryptMessage(passphrase, message)
+            .then((ciphertext) => {
+                alert(ciphertext);
+                return encryption.aes.DecryptMessage(passphrase, ciphertext);
+            })
+            .then((decrypttext) => {
+                alert(decrypttext);
+            });
+        }
 
-                alert(wtf.blind);
-                alert(wtf.blindedElement);
+        function eddsaOnClick() {
+            const {publicKey, privateKey} = encryption.eddsa.GeneratreKeyPair()
+            alert(publicKey);
+            alert(privateKey);
+            
+            const signature = encryption.eddsa.Sign(privateKey, message)
+            alert(signature);
+            
+            isVerified = encryption.eddsa.Verify(publicKey, message, signature);
+            alert(isVerified);
+        }
 
+        function oprfOnClick() {
+            encryption.oprf.Blind(message).then((blined)=> {
+                alert(blined.blind);
+                alert(blined.blindedElement);
+            });
+
+            const blind = 'Apu+5ldgdOk9GrxPIooEUqwisheu3eiUnCOHrBJqbwk=';
+            const evaluatedElement = 'dJq8XkfYMW9OqfF0ROOT4e3nU+9PM1ULm0Dub592uTY=';
+            encryption.oprf.Finalize(message, blind, evaluatedElement).then((output)=> {
+                alert(output);
+            });
+        }
+
+        function rsaOnClick() {
+            let publicKey = null;
+            let privateKey = null;
+            encryption.rsa.GeneratreKeyPair()
+            .then((keys) => {
+                publicKey = keys.publicKey;
+                privateKey = keys.privateKey;
+                alert(publicKey);
+                alert(privateKey);
+                return encryption.rsa.EncryptMessage(publicKey, message);
+            })
+            .then((ciphertext) => {
+                alert(ciphertext);
+                return encryption.rsa.DecryptMessage(privateKey, ciphertext);
+            })
+            .then((decrypttext) => {
+                alert(decrypttext);
             });
         }
     </script>
 </head>
 
 <body>
-    <button onclick="blindOnClick();">Show Message</button>
+    <button onclick="aesOnClick();">Test AES</button>
+    <button onclick="eddsaOnClick();">Test EDDSA</button>
+    <button onclick="oprfOnClick();">Test OPRF</button>
+    <button onclick="rsaOnClick();">Test RSA</button>
 </body>
 
 </html>
