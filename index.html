@@ -1,0 +1,20 @@
+<!doctype HTML>
+<html>
+<head>
+    <script>
+        function blindOnClick() {
+            encryption.oprf.Blind('ggs').then((wtf)=> {
+
+                alert(wtf.blind);
+                alert(wtf.blindedElement);
+
+            });
+        }
+    </script>
+</head>
+
+<body>
+    <button onclick="blindOnClick();">Show Message</button>
+</body>
+
+</html>

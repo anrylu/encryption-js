@@ -1,5 +1,5 @@
-const OPRF = require('oprf');
-const {Uint8ArrayToBase64, Base64ToUint8Array, MergeUint8Array} = require('./utility.js');
+import OPRF from 'oprf'
+import { Uint8ArrayToBase64, Base64ToUint8Array, MergeUint8Array } from './utility'
 
 async function sha512Hash(uint8Array) {
     const buffer = await crypto.subtle.digest('SHA-512', uint8Array);
@@ -20,12 +20,12 @@ async function expandMessage(input) {
     b0Src = MergeUint8Array(b0Src, libStr);
     b0Src = MergeUint8Array(b0Src, new Uint8Array([0]));
     b0Src = MergeUint8Array(b0Src, dstPrime);
-    b0 = await sha512Hash(b0Src);
+    const b0 = await sha512Hash(b0Src);
 
     // calculate bi
     let biSrc = MergeUint8Array(b0, new Uint8Array([1]))
     biSrc = MergeUint8Array(biSrc, dstPrime);
-    bi = await sha512Hash(biSrc)
+    const bi = await sha512Hash(biSrc)
 
     return bi;
 }
@@ -69,7 +69,7 @@ async function Finalize(input, blind, evaluatedElement) {
     return Uint8ArrayToBase64(hash);
 }
 
-module.exports = {
+export default {
     Blind,
-    Finalize,
+    Finalize
 };

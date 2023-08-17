@@ -1,4 +1,4 @@
-const {Uint8ArrayToBase64, Base64ToUint8Array, MergeUint8Array} = require('./utility.js');
+import { Uint8ArrayToBase64, Base64ToUint8Array, MergeUint8Array } from './utility'
 
 async function generateKey(password, salt) {
     const encoder = new TextEncoder();
@@ -72,7 +72,7 @@ async function DecryptMessage(passphrase, ciphertext) {
     return new TextDecoder().decode(decryptedMessageBuffer);
 }
 
-module.exports = {
+export default {
     EncryptMessage,
     DecryptMessage,
 };
