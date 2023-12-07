@@ -1,6 +1,6 @@
 const asn1js = require('asn1js');
 
-import { ExportKeyToPEM, ImportKeyFromPEM } from './utility'
+import { ExportKeyToPEM, ImportKeyFromPEM, Uint8ArrayToBase64 } from './utility'
 import * as nacl from 'tweetnacl'
 import * as naclUtil from 'tweetnacl-util'
 
@@ -40,8 +40,12 @@ function marshalPKCS8PrivateKey(key) {
             }),
             new asn1js.OctetString({
                 name: 'subjectPrivateKey',
-                isHexOnly: true,
-                valueHex: key.subarray(0, 32)
+                value: [
+                    new asn1js.OctetString({
+                        isHexOnly: true,
+                        valueHex: key.subarray(0, 32)
+                    })
+                ]
             }),
         ]
     });
@@ -62,9 +66,10 @@ function GeneratreKeyPair() {
     const publicKeyPEM = ExportKeyToPEM(publicKeyMarshal, true);
     const privateKeyPEM = ExportKeyToPEM(privateKeyMarshal, false);
 
+    const encoder = new TextEncoder();
     return {
-        publicKey: naclUtil.encodeBase64(publicKeyPEM),
-        privateKey: naclUtil.encodeBase64(privateKeyPEM),
+        publicKey: Uint8ArrayToBase64(encoder.encode(publicKeyPEM)),
+        privateKey: Uint8ArrayToBase64(encoder.encode(privateKeyPEM)),
     };
 }
 
