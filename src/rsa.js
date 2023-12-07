@@ -1,4 +1,4 @@
-import { Uint8ArrayToBase64, Base64ToUint8Array, ExportKeyToPEM } from './utility'
+import { Uint8ArrayToBase64, Base64ToUint8Array, ExportKeyToPEM, ImportKeyFromPEM } from './utility'
 
 async function GeneratreKeyPair() {
     // Generate an RSA key pair
@@ -31,16 +31,14 @@ async function GeneratreKeyPair() {
 async function convertPublicKey(publicKeyEncoded) {
     const decoder = new TextDecoder();
     const publicKeyPEM = decoder.decode(Base64ToUint8Array(publicKeyEncoded));
-    const keyData = Base64ToUint8Array(
-        publicKeyPEM.replace(/-----BEGIN .*?-----|-----END .*?-----|[\r\n]/g, ''));
+    const keyData = ImportKeyFromPEM(publicKeyPEM);
     return await crypto.subtle.importKey('spki', keyData.buffer, { name: 'RSA-OAEP', hash: { name: 'SHA-256' } }, true, ['encrypt']);
 }
 
 async function convertPrivateKey(privateKeyEncoded) {
     const decoder = new TextDecoder();
     const privateKeyPEM = decoder.decode(Base64ToUint8Array(privateKeyEncoded));
-    const keyData = Base64ToUint8Array(
-        privateKeyPEM.replace(/-----BEGIN .*?-----|-----END .*?-----|[\r\n]/g, ''));
+    const keyData = ImportKeyFromPEM(privateKeyPEM);
     return await crypto.subtle.importKey('pkcs8', keyData.buffer, { name: 'RSA-OAEP', hash: { name: 'SHA-256' } }, true, ['decrypt']);
 }
 

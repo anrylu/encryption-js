@@ -26,3 +26,8 @@ export function ExportKeyToPEM(key, isPublic) {
 
     return pemHeader + exportedKeyBase64.match(/.{1,64}/g).join('\n') + pemFooter;
 }
+
+export function ImportKeyFromPEM(data) {
+    return Base64ToUint8Array(
+        data.replace(/-----BEGIN .*?-----|-----END .*?-----|[\r\n]/g, ''));
+}
