@@ -49,6 +49,7 @@ function marshalPKCS8PrivateKey(key) {
             }),
         ]
     });
+    sequence.valueBlock.value[2].idBlock.isConstructed = false;
     return new Uint8Array(sequence.toBER(false));
 }
 
@@ -61,7 +62,6 @@ function GeneratreKeyPair() {
     const privateKey = keyPair.secretKey;
     const publicKeyMarshal = marshalPKIXPublicKey(publicKey);
     const privateKeyMarshal = marshalPKCS8PrivateKey(privateKey);
-
     // Convert the exported key to PEM format
     const publicKeyPEM = ExportKeyToPEM(publicKeyMarshal, true);
     const privateKeyPEM = ExportKeyToPEM(privateKeyMarshal, false);

@@ -8,8 +8,8 @@ test('Generate Key Pair', () => {
 
 test('Sign / Verify Message', () => {
     const message = "hello world";
-    const publicKeyEncoded = 'LS0tLS1CRUdJTiBQVUJMSUMgS0VZLS0tLS0KTUNvd0JRWURLMlZ3QXlFQXdtdDBtdDJyZVJiakxUWTRFUXNNMmR6YXlvL0p1NzBEVkRPbUU2V1RSYzg9Ci0tLS0tRU5EIFBVQkxJQyBLRVktLS0tLQo=';
-    const privateKeyEncoded = 'LS0tLS1CRUdJTiBQUklWQVRFIEtFWS0tLS0tCk1DNENBUUF3QlFZREsyVndCQ0lFSUUzWnFUZ0VqQzBXYlU2ZFpWNFRXTVBJSkFpVHpBYXZPL0k1Y1d0VFh3KzkKLS0tLS1FTkQgUFJJVkFURSBLRVktLS0tLQo=';
+    const publicKeyEncoded = 'LS0tLS1CRUdJTiBQVUJMSUMgS0VZLS0tLS0KTUNvd0JRWURLMlZ3QXlFQTk1S2VEQ0hOTVo4Und4ckJnYVpZaDI1aHkzSXJNTGlIcnBWaDcvSHdLVE09Ci0tLS0tRU5EIFBVQkxJQyBLRVktLS0tLQ==';
+    const privateKeyEncoded = 'LS0tLS1CRUdJTiBQUklWQVRFIEtFWS0tLS0tCk1DNENBUUF3QlFZREsyVndCQ0lFSUhKakVUWmZieHNDWjhPVTg4elNVU21GNFptaEs4bUtKdjQ1VVc1OXRxaEIKLS0tLS1FTkQgUFJJVkFURSBLRVktLS0tLQ==';
 
     // ecnrypt
     const signature = eddsa.Sign(privateKeyEncoded, message);
