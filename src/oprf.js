@@ -51,7 +51,8 @@ async function Finalize(input, blind, evaluatedElement) {
     const oprf = new OPRF();
     await oprf.ready;
 
-    // process inpput
+    // process input
+    const inputBytes = new TextEncoder().encode(input)
     evaluatedElement = Base64ToUint8Array(evaluatedElement);
     blind = Base64ToUint8Array(blind);
 
@@ -60,7 +61,7 @@ async function Finalize(input, blind, evaluatedElement) {
     const finalizeDST = new Uint8Array([70, 105, 110, 97, 108, 105, 122, 101]);
 
     // hash
-    let hashInput = MergeUint8Array(new Uint8Array([input.length>>8, input.length&0xFF]), new TextEncoder().encode(input));
+    let hashInput = MergeUint8Array(new Uint8Array([inputBytes.length>>8, inputBytes.length&0xFF]), inputBytes);
     hashInput = MergeUint8Array(hashInput, new Uint8Array([0, 32]));
     hashInput = MergeUint8Array(hashInput, unblindedElement);
     hashInput = MergeUint8Array(hashInput, finalizeDST);
