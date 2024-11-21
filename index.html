@@ -35,7 +35,7 @@
 
             const blind = 'Apu+5ldgdOk9GrxPIooEUqwisheu3eiUnCOHrBJqbwk=';
             const evaluatedElement = 'dJq8XkfYMW9OqfF0ROOT4e3nU+9PM1ULm0Dub592uTY=';
-            encryption.oprf.Finalize(message, blind, evaluatedElement).then((output)=> {
+            encryption.oprf.NewFinalize(message, blind, evaluatedElement).then((output)=> {
                 alert(output);
             });
         }

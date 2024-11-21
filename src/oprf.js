@@ -45,9 +45,32 @@ async function Blind(input) {
     const blind = Uint8ArrayToBase64(masked.mask);
     return { blind, blindedElement };
 }
-  
+
 // Assuming 'evaluatedElement' is the processed value by the server
 async function Finalize(input, blind, evaluatedElement) {
+    const oprf = new OPRF();
+    await oprf.ready;
+
+    // process inpput
+    evaluatedElement = Base64ToUint8Array(evaluatedElement);
+    blind = Base64ToUint8Array(blind);
+
+    // unblind
+    const unblindedElement = oprf.unmaskPoint(evaluatedElement, blind);
+    const finalizeDST = new Uint8Array([70, 105, 110, 97, 108, 105, 122, 101]);
+
+    // hash
+    let hashInput = MergeUint8Array(new Uint8Array([input.length>>8, input.length&0xFF]), new TextEncoder().encode(input));
+    hashInput = MergeUint8Array(hashInput, new Uint8Array([0, 32]));
+    hashInput = MergeUint8Array(hashInput, unblindedElement);
+    hashInput = MergeUint8Array(hashInput, finalizeDST);
+    const hash = await sha512Hash(hashInput);
+
+    return Uint8ArrayToBase64(hash);
+}
+  
+// Assuming 'evaluatedElement' is the processed value by the server
+async function NewFinalize(input, blind, evaluatedElement) {
     const oprf = new OPRF();
     await oprf.ready;
 
@@ -70,31 +93,8 @@ async function Finalize(input, blind, evaluatedElement) {
     return Uint8ArrayToBase64(hash);
 }
 
-// Assuming 'evaluatedElement' is the processed value by the server
-async function OldFinalize(input, blind, evaluatedElement) {
-    const oprf = new OPRF();
-    await oprf.ready;
-
-    // process inpput
-    evaluatedElement = Base64ToUint8Array(evaluatedElement);
-    blind = Base64ToUint8Array(blind);
-
-    // unblind
-    const unblindedElement = oprf.unmaskPoint(evaluatedElement, blind);
-    const finalizeDST = new Uint8Array([70, 105, 110, 97, 108, 105, 122, 101]);
-
-    // hash
-    let hashInput = MergeUint8Array(new Uint8Array([input.length>>8, input.length&0xFF]), new TextEncoder().encode(input));
-    hashInput = MergeUint8Array(hashInput, new Uint8Array([0, 32]));
-    hashInput = MergeUint8Array(hashInput, unblindedElement);
-    hashInput = MergeUint8Array(hashInput, finalizeDST);
-    const hash = await sha512Hash(hashInput);
-
-    return Uint8ArrayToBase64(hash);
-}
-
 export default {
     Blind,
     Finalize,
-    OldFinalize
+    NewFinalize
 };
